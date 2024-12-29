@@ -165,6 +165,7 @@ class SsuGovUkraineSpider(scrapy.Spider):
         print("Extracting data from page:", params['page'])
 
         wanted_list = parsed_tree.xpath('//ul[@class="wanted-list"]/li')
+        # Request on details page for each criminal
         for criminal_tag in wanted_list:
             criminal_url = r'https://ssu.gov.ua/' + ''.join(criminal_tag.xpath('./a/@href'))
             yield scrapy.Request(url=criminal_url, cookies=self.cookies, headers=self.headers, method='GET', meta={'impersonate': random.choice(["firefox", "chrome"])},
