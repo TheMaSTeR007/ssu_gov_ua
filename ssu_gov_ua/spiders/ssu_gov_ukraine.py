@@ -1,16 +1,14 @@
 from scrapy.cmdline import execute
+from lxml.html import fromstring
 from unidecode import unidecode
 from datetime import datetime
-from lxml.html import fromstring
 from typing import Iterable
 from scrapy import Request
-import pandas as pd
 from urllib import parse
-import lxml.html
+import pandas as pd
 import random
 import string
 import scrapy
-import json
 import time
 import evpn
 import os
@@ -124,7 +122,6 @@ class SsuGovUkraineSpider(scrapy.Spider):
         # Path to store the Excel file can be customized by the user
         self.excel_path = r"../Excel_Files"  # Client can customize their Excel file path here (default: govtsites > govtsites > Excel_Files)
         os.makedirs(self.excel_path, exist_ok=True)  # Create Folder if not exists
-        # self.filename = fr"{self.excel_path}/{self.name}_{self.delivery_date}.xlsx"  # Filename with Scrape Date
         self.filename = fr"{self.excel_path}/{self.name}.xlsx"  # Filename with Scrape Date
 
         self.cookies = {
@@ -198,32 +195,6 @@ class SsuGovUkraineSpider(scrapy.Spider):
     def parse_criminal_page(self, response, **kwargs):
         parsed_tree = fromstring(response.text)  # Parse the HTML
         main_page = parsed_tree.xpath('//main[@class="wanted-page"]')[0]
-
-        # # Scraping Person Information
-        # person_info_divs = main_page.xpath('./div[@class="person-info"]//div[@class="person-prop"]')
-        # data_dict: dict = dict()
-        # full_name = get_full_name(main_page)
-        # data_dict['url'] = kwargs['page_url']
-        # data_dict['criminal_url'] = kwargs['criminal_url']
-        # data_dict['full_name'] = full_name
-        # data_dict['image_url'] = get_image_url(main_page)
-        #
-        # phone_numbers = []
-        # for person_info_div in person_info_divs:
-        #     header = get_value(person_info_div, class_value='label')
-        #     value = get_value(person_info_div, class_value='value')
-        #     data_dict[header] = value.replace(full_name, '')
-        #
-        #     # Extract phone numbers from the value using regex
-        #     extracted_phones = extract_phone_numbers(value)
-        #     if extracted_phones:
-        #         phone_numbers.extend(extracted_phones)
-        #
-        # # Add phone numbers to data_dict
-        # data_dict['phone'] = " | ".join(phone_numbers) if phone_numbers else "N/A"
-        #
-        # print('-' * 50)
-        # self.final_data_list.append(data_dict)
 
         # Scraping Person Information
         person_info_divs = main_page.xpath('./div[@class="person-info"]//div[@class="person-prop"]')
